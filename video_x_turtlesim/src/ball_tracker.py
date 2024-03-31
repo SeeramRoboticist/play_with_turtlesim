@@ -15,6 +15,8 @@ class ballTracker:
         self.pose_pub = rospy.Publisher("/turtle/pose", Pose, queue_size = 1)
         self.animation_sub = rospy.Subscriber("/image/ball_animation", Image, self.animation_cb, queue_size = 1)
         self.frame = None
+        self.pose = Pose()
+        self.rate = rospy.Rate(10)
 
     def animation_cb(self, animation_data):
 
@@ -28,7 +30,11 @@ class ballTracker:
         
         circles = np.uint16(np.round(circles))
         circles = circles[0][0]
-        print(circles)
+        self.pose.x, self.pose.y = self.calibration(circles[0], (circles[1]) - 500)
+
+        self.pose_pub.publish(self.pose)
+        self.rate.sleep()
+
 
         """To view the Circle in ouput uncomment below lines"""
 
@@ -39,16 +45,13 @@ class ballTracker:
         #     cv2.destroyAllWindows()
         #     self.animation_sub.unregister()
 
+    def calibration(self, x, y):
 
-    def pose_publisher(self):
+        x_pose = x * 0.022
+        y_pose = -(y * 0.022)
 
-        while not rospy.is_shutdown():
+        return x_pose , y_pose
 
-            cv2.imshow("frame", self.frame)
-            if cv2.waitKeqy(1) & 0xFF == ord('q'):
-                break
-        
-        cv2.destroyAllWindows()
 
 if __name__ == "__main__":
     rospy.init_node("ball_tracker", anonymous=True)
