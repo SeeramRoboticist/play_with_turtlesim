@@ -13,10 +13,14 @@ class ballTracker:
     def __init__(self) -> None:
 
         self.pose_pub = rospy.Publisher("/turtle/pose", Pose, queue_size = 1)
+        if self.pose_pub.get_num_connections() == 0:
+            rospy.loginfo("waiting for /turtle/pose")
+        while self.pose_pub.get_num_connections() == 0:
+            pass
+        rospy.loginfo("Subscribed")
         self.animation_sub = rospy.Subscriber("/image/ball_animation", Image, self.animation_cb, queue_size = 1)
         self.frame = None
         self.pose = Pose()
-        self.rate = rospy.Rate(10)
 
     def animation_cb(self, animation_data):
 
@@ -33,7 +37,6 @@ class ballTracker:
         self.pose.x, self.pose.y = self.calibration(circles[0], circles[1])
 
         self.pose_pub.publish(self.pose)
-        self.rate.sleep()
 
 
         """To view the Circle in ouput uncomment below lines"""
@@ -48,7 +51,7 @@ class ballTracker:
     def calibration(self, x, y):
 
         x_pose = x * 0.022
-        y_pose = y * 0.022
+        y_pose = (500-y) * 0.022
 
         return x_pose , y_pose
 
