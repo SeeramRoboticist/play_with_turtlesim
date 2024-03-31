@@ -47,9 +47,9 @@ while stream_video:
         cv2.line(frame, (center_x, 0), (center_x, frame_height), (255, 255, 255), 1)
         
         # Draw green ball (circle)
-        ball_radius = 15
+        ball_radius = 20
         cv2.circle(frame, (center_x + x, center_y + y), ball_radius, (0, 255, 0), -1)
-        # print(center_x + x, center_y + y)
+        print(center_x + x, center_y + y)
         
         # Show frame and Publish it to rostopic
         cv2.imshow('Lemniscate Motion', frame)
@@ -58,4 +58,4 @@ while stream_video:
         if cv2.waitKey(25) & 0xFF == ord('q'):
             cv2.destroyAllWindows()
             stream_video = False
-            break
+            break   
