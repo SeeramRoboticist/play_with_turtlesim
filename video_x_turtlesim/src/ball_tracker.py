@@ -30,7 +30,7 @@ class ballTracker:
         
         circles = np.uint16(np.round(circles))
         circles = circles[0][0]
-        self.pose.x, self.pose.y = self.calibration(circles[0], (circles[1]) - 500)
+        self.pose.x, self.pose.y = self.calibration(circles[0], circles[1])
 
         self.pose_pub.publish(self.pose)
         self.rate.sleep()
@@ -48,7 +48,7 @@ class ballTracker:
     def calibration(self, x, y):
 
         x_pose = x * 0.022
-        y_pose = -(y * 0.022)
+        y_pose = y * 0.022
 
         return x_pose , y_pose
 
