@@ -12,6 +12,7 @@ class ballTracker:
 
     def __init__(self) -> None:
 
+        #Ininitializing ROS and Waiting for Subscribers
         self.pose_pub = rospy.Publisher("/turtle/pose", Pose, queue_size = 1)
         if self.pose_pub.get_num_connections() == 0:
             rospy.loginfo("waiting for /turtle/pose")
@@ -29,10 +30,12 @@ class ballTracker:
         gray_frame = cv2.cvtColor(self.frame, cv2.COLOR_BGR2GRAY)
         blur_frame = cv2.GaussianBlur(gray_frame, (17,17), 8)
 
+        #TO DETECT CIRCLES IN THE GIVEN FRAME
+
         circles = cv2.HoughCircles(blur_frame, cv2.HOUGH_GRADIENT, 1.2, 180, 
                                    param1=100, param2=30, minRadius=10, maxRadius=400)
         
-        circles = np.uint16(np.round(circles))
+        circles = np.uint16(np.round(circles)) # Returns center position and circle radius
         circles = circles[0][0]
         self.pose.x, self.pose.y = self.calibration(circles[0], circles[1])
 
@@ -49,6 +52,8 @@ class ballTracker:
         #     self.animation_sub.unregister()
 
     def calibration(self, x, y):
+
+        """To calibrate the x,y values from the frame to match the turtlesim co-ordinates"""
 
         x_pose = x * 0.022
         y_pose = (500-y) * 0.022
