@@ -34,8 +34,7 @@ center_y = frame_height // 2
 
 # Generate frames
 num_frames = 200
-stream_video = True
-while stream_video:
+while not rospy.is_shutdown():
 
     for i in range(50 , num_frames + 50):
         t = 2 * math.pi * i / num_frames
@@ -57,5 +56,4 @@ while stream_video:
         video_publisher.publish(cv)
         if cv2.waitKey(25) & 0xFF == ord('q'):
             cv2.destroyAllWindows()
-            stream_video = False
-            break   
+            break
