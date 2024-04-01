@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+
+<launch>
+
+	<!-- To bringup the turtlesim -->
+	<node pkg="turtlesim" name="turle" type="turtlesim_node" />
+
+	<!-- Video_generator node -->
+	<node pkg="video_x_turtlesim" name="video_generator" type="video_generator.py" />
+
+	<!-- Ball Tracker -->
+	<node pkg="video_x_turtlesim" name="ball_tracker" type="ball_tracker.py" />
+
+	<!-- Move Turtle -->
+	<node pkg="video_x_turtlesim" name="move_turtle" type="move_turtle.py" />
+
+</launch>
